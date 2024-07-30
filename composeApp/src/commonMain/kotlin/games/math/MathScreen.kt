@@ -1,4 +1,4 @@
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -73,7 +73,11 @@ fun Answers(
     onAnswerClick: (player: Player, tap: Int) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-    AnimatedVisibility(answers.isNotEmpty()) {
+    AnimatedVisibility(
+        visible = answers.isNotEmpty(),
+        enter = scaleIn(),
+        exit = scaleOut(),
+    ) {
         Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
