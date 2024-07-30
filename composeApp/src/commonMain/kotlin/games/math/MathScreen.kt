@@ -1,15 +1,15 @@
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import components.Player
 import components.score.Score
 
@@ -32,7 +32,7 @@ fun MathScreen(
 }
 
 @Composable
-fun Game(
+private fun Game(
     mathViewModel: MathViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -67,47 +67,51 @@ fun Game(
 }
 
 @Composable
-fun Answers(
+private fun Answers(
     player: Player,
     answers: List<Int>,
     onAnswerClick: (player: Player, tap: Int) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-    AnimatedVisibility(
-        visible = answers.isNotEmpty(),
-        enter = scaleIn(),
-        exit = scaleOut(),
-    ) {
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
+    Column(modifier = modifier) {
+        AnimatedVisibility(
+            visible = answers.isNotEmpty(),
+            enter = scaleIn(),
+            exit = scaleOut(),
         ) {
-            for (answer in answers) {
-                var isClickCorrect by remember { mutableStateOf<Boolean?>(null) }
-                val buttonColors = when (isClickCorrect) {
-                    null -> {
-                        ButtonDefaults.buttonColors()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(space = 40.dp, alignment = Alignment.CenterHorizontally),
+            ) {
+                for (answer in answers) {
+                    var isClickCorrect by remember { mutableStateOf<Boolean?>(null) }
+                    val buttonColors = when (isClickCorrect) {
+                        null -> {
+                            ButtonDefaults.buttonColors()
+                        }
+
+                        true -> {
+                            ButtonDefaults.buttonColors(backgroundColor = Color.Green)
+                        }
+
+                        else -> {
+                            ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                        }
                     }
 
-                    true -> {
-                        ButtonDefaults.buttonColors(backgroundColor = Color.Green)
+                    Button(
+                        onClick = {
+                            isClickCorrect = onAnswerClick(player, answer)
+                        },
+                        shape = RoundedCornerShape(25),
+                        colors = buttonColors
+                    ) {
+                        Text(
+                            text = answer.toString(),
+                            fontSize = 24.sp
+                        )
+                        // todo: stylize text
                     }
-
-                    else -> {
-                        ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-                    }
-                }
-
-                Button(
-                    onClick = {
-                        isClickCorrect = onAnswerClick(player, answer)
-                    },
-                    colors = buttonColors
-                ) {
-                    Text(
-                        text = answer.toString(),
-                    )
-                    // todo: stylize text
                 }
             }
         }
@@ -115,13 +119,14 @@ fun Answers(
 }
 
 @Composable
-fun Task(
+private fun Task(
     task: String,
     modifier: Modifier = Modifier,
 ) {
     Text(
         text = task,
         modifier = modifier.fillMaxWidth(),
+        fontSize = 24.sp,
         textAlign = TextAlign.Center
     )
     // todo: stylize text
