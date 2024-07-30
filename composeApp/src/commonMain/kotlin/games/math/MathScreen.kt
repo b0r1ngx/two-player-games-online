@@ -41,24 +41,27 @@ fun Game(
 
     Column(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround,
     ) {
         Answers(
             player = Player.P1,
             answers = answers,
             onAnswerClick = mathViewModel::processAnswer,
-            modifier = Modifier.rotate(180f),
+            modifier = Modifier.rotate(180f).weight(1 / 4f),
         )
         Task(
             task = task,
-            modifier = Modifier.rotate(180f),
+            modifier = Modifier.rotate(180f).weight(1 / 4f),
         )
         Divider()
-        Task(task = task)
+        Task(
+            task = task,
+            modifier = Modifier.weight(1 / 4f),
+        )
         Answers(
             player = Player.P2,
             answers = answers,
             onAnswerClick = mathViewModel::processAnswer,
+            modifier = Modifier.weight(1 / 4f),
         )
     }
 }

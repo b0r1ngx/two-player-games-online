@@ -1,11 +1,26 @@
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import components.Player
 import components.score.ScoreViewModel
+import games.Difficult
 import games.math.Signs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-const val DELAY_IN_MILLIS = 1_000
+const val DELAY_IN_MILLIS = 1_000L
 
-class MathViewModel {
+class MathViewModel(
+    difficult: Difficult = Difficult.MEDIUM,
+) : ViewModel() {
+    val range = when (difficult) {
+        Difficult.EASY -> 1..10
+        Difficult.MEDIUM -> 1..50
+        Difficult.HARD -> 1..100
+        Difficult.IMPOSSIBLE -> -1000..1000
+    }
+
     val scoreViewModel = ScoreViewModel()
 
     var task = mutableStateOf("")
@@ -25,15 +40,15 @@ class MathViewModel {
         task.value = _task
         answer = _answer
 
-        // scope.delay(DELAY_IN_MILLIS)
-
-        answers.value = prepareWrongAnswers(_answer)
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(DELAY_IN_MILLIS)
+            answers.value = prepareWrongAnswers(_answer)
+        }
     }
 
     private fun prepareTask(): Pair<String, Int> {
         val sign = Signs.entries.random()
 
-        val range = 1..100
         val numbers = List(2) { range.random() }
         val (first, second) = numbers
 
@@ -52,28 +67,30 @@ class MathViewModel {
     }
 
     fun processAnswer(player: Player, tap: Int): Boolean {
-        val result: Boolean
-        when (player) {
+        val result = when (player) {
             Player.P1 -> if (tap == answer) {
                 scoreViewModel.p1Wins()
-                result = true
+                true
             } else {
                 scoreViewModel.p2Wins()
-                result = false
+                false
             }
 
             Player.P2 -> if (tap == answer) {
                 scoreViewModel.p2Wins()
-                result = true
+                true
             } else {
                 scoreViewModel.p1Wins()
-                result = false
+                false
             }
         }
 
-        // scope.delay(DELAY_IN_MILLIS)
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(DELAY_IN_MILLIS)
+            answers.value = listOf()
+            generateTask()
+        }
 
-        generateTask()
         return result
     }
 }
