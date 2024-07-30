@@ -1,24 +1,24 @@
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import components.Player
 import components.score.Score
 
 @Composable
 fun MathScreen(
-    mathViewModel: MathViewModel,
+    mathViewModel: MathViewModel = MathViewModel(),
     modifier: Modifier = Modifier,
 ) {
-
+    // todo: add background
     Box(modifier = modifier) {
         Game(mathViewModel)
         Score(
@@ -36,7 +36,8 @@ fun Game(
     mathViewModel: MathViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val (task, answers) = mathViewModel.generateTask()
+    val task by remember { mathViewModel.task }
+    val answers by remember { mathViewModel.answers }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -66,21 +67,41 @@ fun Game(
 fun Answers(
     player: Player,
     answers: List<Int>,
-    onAnswerClick: (player: Player, tap: Int) -> Unit,
+    onAnswerClick: (player: Player, tap: Int) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround,
-    ) {
-        for (answer in answers) {
-            Button(
-                onClick = { onAnswerClick(player, answer) },
-            ) {
-                Text(
-                    text = answer.toString(),
-                )
-                // todo: stylize text
+    AnimatedVisibility(answers.isNotEmpty()) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+        ) {
+            for (answer in answers) {
+                var isClickCorrect by mutableStateOf<Boolean?>(null)
+                val buttonColors = when (isClickCorrect) {
+                    null -> {
+                        ButtonDefaults.buttonColors()
+                    }
+
+                    true -> {
+                        ButtonDefaults.buttonColors(backgroundColor = Color.Green)
+                    }
+
+                    else -> {
+                        ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        isClickCorrect = onAnswerClick(player, answer)
+                    },
+                    colors = buttonColors
+                ) {
+                    Text(
+                        text = answer.toString(),
+                    )
+                    // todo: stylize text
+                }
             }
         }
     }

@@ -1,38 +1,33 @@
 import androidx.compose.runtime.mutableStateOf
 import components.Player
 import components.score.ScoreViewModel
+import games.math.Signs
 
-enum class Signs {
-    PLUS, MINUS, MULTIPLY, DIVIDE;
-
-    fun Int.op(o: Int): Int {
-        return when (this@Signs) {
-            PLUS -> this.plus(o)
-            MINUS -> this.minus(o)
-            MULTIPLY -> this.times(o)
-            DIVIDE -> this.div(o)
-        }
-    }
-
-    override fun toString(): String {
-        return when (this) {
-            PLUS -> "+"
-            MINUS -> "-"
-            MULTIPLY -> "*"
-            DIVIDE -> "/"
-        }
-    }
-}
+const val DELAY_IN_MILLIS = 1_000
 
 class MathViewModel {
     val scoreViewModel = ScoreViewModel()
-    private var correctAnswer = 0
-    val isLoading = mutableStateOf(false)
 
-    fun generateTask(): Pair<String, List<Int>> {
-        val (task, answer) = prepareTask()
-        correctAnswer = answer
-        return task to prepareWrongAnswers(answer)
+    var task = mutableStateOf("")
+        private set
+    var answers = mutableStateOf<List<Int>>(listOf())
+        private set
+
+    private var answer = 0
+
+    init {
+        generateTask()
+    }
+
+    private fun generateTask() {
+        val (_task, _answer) = prepareTask()
+
+        task.value = _task
+        answer = _answer
+
+        // scope.delay(DELAY_IN_MILLIS)
+
+        answers.value = prepareWrongAnswers(_answer)
     }
 
     private fun prepareTask(): Pair<String, Int> {
@@ -52,13 +47,33 @@ class MathViewModel {
         val wrongsRange = 1..10
         wrongAnswers.add(answer.plus(wrongsRange.random()))
         wrongAnswers.add(answer.minus(wrongsRange.random()))
+        wrongAnswers.shuffle()
         return wrongAnswers
     }
 
-    fun processAnswer(player: Player, tap: Int) {
+    fun processAnswer(player: Player, tap: Int): Boolean {
+        val result: Boolean
         when (player) {
-            Player.P1 -> if (tap == correctAnswer) scoreViewModel.p1Wins() else scoreViewModel.p2Wins()
-            Player.P2 -> if (tap == correctAnswer) scoreViewModel.p2Wins() else scoreViewModel.p1Wins()
+            Player.P1 -> if (tap == answer) {
+                scoreViewModel.p1Wins()
+                result = true
+            } else {
+                scoreViewModel.p2Wins()
+                result = false
+            }
+
+            Player.P2 -> if (tap == answer) {
+                scoreViewModel.p2Wins()
+                result = true
+            } else {
+                scoreViewModel.p1Wins()
+                result = false
+            }
         }
+
+        // scope.delay(DELAY_IN_MILLIS)
+
+        generateTask()
+        return result
     }
 }

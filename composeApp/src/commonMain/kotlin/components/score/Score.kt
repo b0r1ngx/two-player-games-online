@@ -18,7 +18,7 @@ fun Score(
     Box() {
         // todo: add background
         Text(
-            text = "$p1score : $p2score",
+            text = "$p2score : $p1score",
             modifier = modifier,
             textAlign = TextAlign.Center
         )
