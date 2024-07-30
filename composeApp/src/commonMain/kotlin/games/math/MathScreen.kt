@@ -1,7 +1,7 @@
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,11 +91,11 @@ private fun Answers(
                         }
 
                         true -> {
-                            ButtonDefaults.buttonColors(backgroundColor = Color.Green)
+                            ButtonDefaults.buttonColors(containerColor = Color.Green)
                         }
 
                         else -> {
-                            ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                            ButtonDefaults.buttonColors(containerColor = Color.Red)
                         }
                     }
 
