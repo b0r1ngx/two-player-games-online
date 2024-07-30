@@ -15,7 +15,7 @@ fun Score(
 ) {
     val p1score by remember { scoreViewModel.p1score }
     val p2score by remember { scoreViewModel.p2score }
-    Box() {
+    Box {
         // todo: add background
         Text(
             text = "$p2score : $p1score",

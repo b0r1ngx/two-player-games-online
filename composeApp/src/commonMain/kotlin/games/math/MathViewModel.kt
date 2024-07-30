@@ -1,10 +1,11 @@
+package games.math
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import components.Player
 import components.score.ScoreViewModel
 import games.Difficult
-import games.math.Signs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ const val DELAY_IN_MILLIS = 1_000L
 class MathViewModel(
     difficult: Difficult = Difficult.MEDIUM,
 ) : ViewModel() {
-    val range = when (difficult) {
+    private val range = when (difficult) {
         Difficult.EASY -> 1..10
         Difficult.MEDIUM -> 1..50
         Difficult.HARD -> 1..100
@@ -35,14 +36,14 @@ class MathViewModel(
     }
 
     private fun generateTask() {
-        val (_task, _answer) = prepareTask()
+        val (newTask, newAnswer) = prepareTask()
 
-        task.value = _task
-        answer = _answer
+        task.value = newTask
+        answer = newAnswer
 
         viewModelScope.launch(Dispatchers.Main) {
             delay(DELAY_IN_MILLIS)
-            answers.value = prepareWrongAnswers(_answer)
+            answers.value = prepareWrongAnswers(newAnswer)
         }
     }
 

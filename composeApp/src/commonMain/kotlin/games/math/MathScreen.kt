@@ -1,3 +1,5 @@
+package games.math
+
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,7 +54,7 @@ private fun Game(
             task = task,
             modifier = Modifier.rotate(180f).weight(1 / 4f),
         )
-        Divider()
+        HorizontalDivider()
         Task(
             task = task,
             modifier = Modifier.weight(1 / 4f),
