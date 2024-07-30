@@ -79,7 +79,7 @@ fun Answers(
             horizontalArrangement = Arrangement.SpaceAround,
         ) {
             for (answer in answers) {
-                var isClickCorrect by mutableStateOf<Boolean?>(null)
+                var isClickCorrect by remember { mutableStateOf<Boolean?>(null) }
                 val buttonColors = when (isClickCorrect) {
                     null -> {
                         ButtonDefaults.buttonColors()
