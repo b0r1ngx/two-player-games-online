@@ -40,6 +40,7 @@ private fun Game(
 ) {
     val task by remember { mathViewModel.task }
     val answers by remember { mathViewModel.answers }
+    val isButtonsEnabled = remember { mathViewModel.isButtonsEnabled }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -48,6 +49,7 @@ private fun Game(
             player = Player.P1,
             answers = answers,
             onAnswerClick = mathViewModel::processAnswer,
+            isButtonsEnabled = isButtonsEnabled,
             modifier = Modifier.rotate(180f).weight(1 / 4f),
         )
         Task(
@@ -63,6 +65,7 @@ private fun Game(
             player = Player.P2,
             answers = answers,
             onAnswerClick = mathViewModel::processAnswer,
+            isButtonsEnabled = isButtonsEnabled,
             modifier = Modifier.weight(1 / 4f),
         )
     }
@@ -73,6 +76,7 @@ private fun Answers(
     player: Player,
     answers: List<Int>,
     onAnswerClick: (player: Player, tap: Int) -> Boolean,
+    isButtonsEnabled: MutableState<Boolean>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -81,8 +85,6 @@ private fun Answers(
             enter = scaleIn(),
             exit = scaleOut(),
         ) {
-            var isButtonsEnabled by remember { mutableStateOf(true) }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(space = 40.dp, alignment = Alignment.CenterHorizontally),
@@ -112,9 +114,9 @@ private fun Answers(
                     Button(
                         onClick = {
                             isClickCorrect = onAnswerClick(player, answer)
-                            isButtonsEnabled = false
+                            isButtonsEnabled.value = false
                         },
-                        enabled = isButtonsEnabled,
+                        enabled = isButtonsEnabled.value,
                         shape = RoundedCornerShape(25),
                         colors = buttonColors
                     ) {

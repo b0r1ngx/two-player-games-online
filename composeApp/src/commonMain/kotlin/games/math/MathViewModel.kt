@@ -29,6 +29,8 @@ class MathViewModel(
     var answers = mutableStateOf<List<Int>>(listOf())
         private set
 
+    var isButtonsEnabled = mutableStateOf(true)
+
     private var answer = 0
 
     init {
@@ -43,6 +45,7 @@ class MathViewModel(
 
         viewModelScope.launch(Dispatchers.Main) {
             delay(DELAY_IN_MILLIS)
+            isButtonsEnabled.value = true
             answers.value = prepareWrongAnswers(newAnswer)
         }
     }
