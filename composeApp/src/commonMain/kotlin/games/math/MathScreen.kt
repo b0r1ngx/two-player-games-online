@@ -1,10 +1,27 @@
 package games.math
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -22,14 +39,8 @@ fun MathScreen(
 ) {
     // todo: add background
     Box(modifier = modifier) {
-        Game(mathViewModel)
-        Score(
-            scoreViewModel = mathViewModel.scoreViewModel,
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.TopCenter)
-                .rotate(270f)
-        )
+        Game(mathViewModel = mathViewModel)
+        Score(scoreViewModel = mathViewModel.scoreViewModel)
     }
 }
 
@@ -87,7 +98,10 @@ private fun Answers(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(space = 40.dp, alignment = Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 40.dp,
+                    alignment = Alignment.CenterHorizontally
+                ),
             ) {
                 for (answer in answers) {
                     var isClickCorrect by remember { mutableStateOf<Boolean?>(null) }
