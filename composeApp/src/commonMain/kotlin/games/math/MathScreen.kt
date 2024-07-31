@@ -81,6 +81,8 @@ private fun Answers(
             enter = scaleIn(),
             exit = scaleOut(),
         ) {
+            var isButtonsEnabled by remember { mutableStateOf(true) }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(space = 40.dp, alignment = Alignment.CenterHorizontally),
@@ -93,18 +95,26 @@ private fun Answers(
                         }
 
                         true -> {
-                            ButtonDefaults.buttonColors(containerColor = Color.Green)
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color.Green,
+                                disabledContainerColor = Color.Green
+                            )
                         }
 
                         else -> {
-                            ButtonDefaults.buttonColors(containerColor = Color.Red)
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color.Red,
+                                disabledContainerColor = Color.Red
+                            )
                         }
                     }
 
                     Button(
                         onClick = {
                             isClickCorrect = onAnswerClick(player, answer)
+                            isButtonsEnabled = false
                         },
+                        enabled = isButtonsEnabled,
                         shape = RoundedCornerShape(25),
                         colors = buttonColors
                     ) {
@@ -125,11 +135,16 @@ private fun Task(
     task: String,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = task,
+    Column(
         modifier = modifier.fillMaxWidth(),
-        fontSize = 24.sp,
-        textAlign = TextAlign.Center
-    )
-    // todo: stylize text
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = task,
+            modifier = Modifier.fillMaxWidth(),
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center
+        )
+        // todo: stylize text
+    }
 }
