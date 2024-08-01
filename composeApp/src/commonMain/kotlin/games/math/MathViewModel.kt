@@ -57,6 +57,13 @@ class MathViewModel(
         val (first, second) = numbers
 
         val answer = with(sign) { first.op(second) }
+        if (sign == Signs.DIVIDE) {
+            val realAnswer = first / second.toFloat()
+            if (answer.toFloat() != realAnswer) {
+                return prepareTask()
+            }
+        }
+
         val task = "$first $sign $second"
         return task to answer
     }
