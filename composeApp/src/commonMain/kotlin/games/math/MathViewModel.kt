@@ -50,6 +50,8 @@ class MathViewModel(
         }
     }
 
+    // todo: add this to game configure?: improper fractions
+    // todo: add this to game configure?: negative numbers
     private fun prepareTask(): Pair<String, Int> {
         val sign = Signs.entries.random()
 
