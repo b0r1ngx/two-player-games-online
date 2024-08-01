@@ -52,17 +52,15 @@ class MathViewModel(
 
     // todo: add this to game configure?: improper fractions
     // todo: add this to game configure?: negative numbers
-    private fun prepareTask(): Pair<String, Int> {
-        val sign = Signs.entries.random()
-
+    private fun prepareTask(sign: Sign = Sign.entries.random()): Pair<String, Int> {
         val numbers = List(2) { range.random() }
         val (first, second) = numbers
 
         val answer = with(sign) { first.op(second) }
-        if (sign == Signs.DIVIDE) {
+        if (sign == Sign.DIVIDE) {
             val realAnswer = first / second.toFloat()
             if (answer.toFloat() != realAnswer) {
-                return prepareTask()
+                return prepareTask(sign = Sign.DIVIDE)
             }
         }
 
